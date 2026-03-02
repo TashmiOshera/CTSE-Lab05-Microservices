@@ -5,13 +5,11 @@ app.use(express.json());
 let orders = [];
 let idCounter = 1;
 
-// GET all orders
-app.get('/orders', (req, res) => {
+app.get('/', (req, res) => {
     res.json(orders);
 });
 
-// POST new order
-app.post('/orders', (req, res) => {
+app.post('/', (req, res) => {
     const order = {
         id: idCounter++,
         ...req.body,
@@ -21,14 +19,11 @@ app.post('/orders', (req, res) => {
     res.status(201).json(order);
 });
 
-// GET order by ID
-app.get('/orders/:id', (req, res) => {
-    const order = orders.find(o => o.id == req.params.id);
-    if (order) {
-        res.json(order);
-    } else {
-        res.status(404).json({ message: "Order not found" });
-    }
+app.get('/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    const order = orders.find(o => o.id === id);
+    if (!order) return res.status(404).json({ message: "Not found" });
+    res.json(order);
 });
 
 app.listen(8082, () => {

@@ -5,13 +5,11 @@ app.use(express.json());
 let payments = [];
 let idCounter = 1;
 
-// GET all payments
-app.get('/payments', (req, res) => {
+app.get('/', (req, res) => {
     res.json(payments);
 });
 
-// POST process payment
-app.post('/payments/process', (req, res) => {
+app.post('/process', (req, res) => {
     const payment = {
         id: idCounter++,
         ...req.body,
@@ -21,14 +19,11 @@ app.post('/payments/process', (req, res) => {
     res.status(201).json(payment);
 });
 
-// GET payment by ID
-app.get('/payments/:id', (req, res) => {
-    const payment = payments.find(p => p.id == req.params.id);
-    if (payment) {
-        res.json(payment);
-    } else {
-        res.status(404).json({ message: "Payment not found" });
-    }
+app.get('/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    const payment = payments.find(p => p.id === id);
+    if (!payment) return res.status(404).json({ message: "Not found" });
+    res.json(payment);
 });
 
 app.listen(8083, () => {
